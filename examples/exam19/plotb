@@ -1,0 +1,19 @@
+init inf=2minb.str
+profile infile=initepi.dat ant
+select z=log10(ant)
+plot.1d x.mi=0.3 x.ma=0.85 y.mi=16 line.type=9
+
+select z=log10(bor)
+plot.1d cl=f ax=f line.type=1
+
+init inf=10minb.str
+select z=log10(bor)
+plot.1d cl=f ax=f line.type=3
+
+init inf=30minb.str
+select z=log10(bor)
+plot.1d cl=f ax=f line.type=5
+
+init inf=120minb.str
+select z=log10(bor)
+plot.1d cl=f ax=f line.type=7

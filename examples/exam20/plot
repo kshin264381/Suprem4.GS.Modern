@@ -1,0 +1,11 @@
+init inf=example20.str
+profile infile=initepi.dat ant
+select z=log10(antimony)
+plot.1d x.mi=0.3 x.ma=0.85 y.mi=16 line.type=5
+
+select z=log10(bor)
+plot.1d cl=f ax=f line.type=1
+
+init inf=example20b.str
+select z=log10(bor)
+plot.1d cl=f ax=f line.type=3

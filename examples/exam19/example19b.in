@@ -1,0 +1,90 @@
+option quiet 
+set echo 
+mode one.dim
+
+# set boron fi and diffusion coefficient
+boron silicon Fi=0.8
+boron silicon Dix.0=0.037 Dix.E=3.46 Dip.0=0.72 Dip.E=3.46
+
+# set up grid
+line x loc=0.0 spacing=0.005 tag=top
+line x loc=0.135 spacing=0.005
+line x loc=0.145 spacing=0.005
+line x loc=0.155 spacing=0.0003
+line x loc=0.165 spacing=0.0003
+line x loc=0.175 spacing=0.0003
+line x loc=0.185 spacing=0.0003
+line x loc=0.195 spacing=0.0003
+line x loc=0.205 spacing=0.005
+line x loc=0.215 spacing=0.005
+line x loc=0.3 spacing=0.01
+line x loc=0.6 spacing=0.01
+line x loc=1.0 spacing=0.01
+line x loc=5.0 spacing=0.5
+line x loc=200.0 spacing=10.0 tag=bottom
+
+# initialize structure
+region silicon  xlo=top xhi=bottom
+bound exposed xlo=top xhi=top
+bound backside xlo=bottom xhi=bottom
+init phosphorus  conc=     1.00e+14  orient = 100 
+
+# set up method and errors
+method two.d
+method inter  rel.err=.001 
+method vacan rel.err=.001 
+
+# turn off traps
+trap    silicon total=0 enable=f
+interst silicon ktrap.0=1.0e-30 ktrap.E=0.0
+
+# only use neutral defects
+interst silicon neu.0=1.0 neg.0=0.00 dneg.0=0.0 pos.0=0.00 dpos.0=0.0
+interst silicon neu.E=0.0 neg.E=0.00 dneg.E=0.0 pos.E=0.00 dpos.E=0.0
+
+# vacancy parameters
+vacancy silicon Cstar.0=4.77e18 Cstar.E=0.713
+vacancy silicon D.0=6.34e3 D.E=3.29
+vacancy silicon /oxide    Ksurf.0=1174.0 Ksurf.E=2.62
+
+# interstitial parameters
+interst silicon D.0=1.03e6 D.E=3.22
+interst silicon /gas Ksurf.0=74.6 Ksurf.E=1.53
+interst silicon /oxide Ksurf.0=74.6 Ksurf.E=1.53
+interst silicon Cstar.0=5.1e11 Cstar.E=0.0
+
+# Bulk recombination
+interst silicon Kr.0=1.4 Kr.E=3.99
+vacancy silicon Kr.0=1.4 Kr.E=3.99
+
+# read in initial boron epi profile
+profile infile=initepi.dat bor
+
+# initialize defects
+method fermi
+diffuse temp=750 time=0.001
+
+# turn on "clusters"
+#dislocation rinit=10e-8 looploc=1750e-8 rho=1.35e10 fdrdt=0.35
+#dislocation loopgdt=0.001 maxsi=1.5e3 gamma=4.375e13 omega=2.0e-23
+#dislocation burger=3.14e-8 mu=4.975e23 nu=0.27864583333 ro=3.14e-8
+
+# read in initial interstitial profile
+profile infile=si.50.5e12 interst
+
+method two.d init=1e-6
+
+# 750C inert anneals
+diffuse time=2 temp=750 argon
+struct out=2minb.str
+
+diffuse time=8 temp=750 argon cont
+struct out=10minb.str
+
+diffuse time=20 temp=750 argon cont
+struct out=30minb.str
+
+diffuse time=90 temp=750 argon cont
+struct out=120minb.str
+
+quit

@@ -1,0 +1,31 @@
+# Example from Suprem4 Manual
+# Example 1 Boron Anneal 1D
+
+set echo
+mode one.dim
+
+# Defining vertical dimension
+line    x loc = 0       spacing = 0.02  tag = top
+line    x loc = 0.50    spacing = 0.02
+line    x loc = 20.0    spacing = 0.25  tag = bottom
+
+# The silicon wafer
+region  silicon         xlo = top       xhi = bottom
+
+# Set up exposed surfaces
+bound   exposed         xlo = top       xhi = top
+
+# Initial calculation
+init    boron conc=1.0e14
+
+# Depositing padding oxide
+deposit oxide thick=0.075
+
+# Now the boron implant with pearson model
+implant boron dose=1e14 energy=70 pearson
+
+# Diffusion
+diffuse time=30 temp=1100
+
+# save the data
+structure out=ex1.str

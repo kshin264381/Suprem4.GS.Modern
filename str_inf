@@ -1,0 +1,58 @@
+v SUPREM-IV.GS 9450
+--> Display Version...
+
+D 1 2 2
+--> Dimension (Num of dimension) (Num of vertices) (Num of edges)
+
+c 1 0  0
+1) 1D case (this case)
+--> Line Data (node number) (x coord) (Spacer? or... dummy for 3D implementation?)
+2) 2D case
+--> Line Data (node number) (x coord) (y coord) (Spacer? or... dummy for 3D implementation?)
+
+r 1   3
+--> Region Sync (region number) (material number --> see below)
+
+t 1 1 2 1 240 2 -1 -1
+--> Mesh Triangles (triangle number) (region number) (triangle index 1) (triangle index 2) (trinalgle index 3) and (triangle angle 4--> 2nd triangle) (father?) (offspring? what are they?)
+
+M 0 1.373000e+03 0.000000e+00 0.000000e+00 inf
+--> Mathematical stuff (Substrate Orientation) (Last Temperature) (radious of dislocation loops) (density of dislocation loops atoms/cm2) (Loops Length)
+
+s 6   5 23 0 1 12 14
+--> Read in number of solutions and impurity types --> See below for impurity mapping table
+** Impurity numbers **
+ Vacancies          0
+ Interstitials      1
+ Arsenic            2
+ Phosphorus         3
+ Antimony           4
+ Boron              5
+ 
+ Electron           6
+ Hole               7
+ 
+ Arsenic Active    20
+ Phosphorus Active 21
+ Antimony Active   22
+ Boron Active      23
+ Polysilicon Grain 24
+**********************
+
+n 240   0   1.000000e+08 1.000000e+08 1.000000e+00 1.000000e+00 5.000000e-01 0.000000e+00 
+--> Solution Values (node number) (Material Number) (Impurity solutions (6 variables) --> to the end)
+Solutions --> First two seems to be Net Doping (/cm3)
+
+** Material numbers **
+ SiO2               1
+ SiNi               2
+ Si                 3
+ Poly               4
+ OxNi               5
+ Al                 6
+ Photoresist        7
+ GaAs               8
+**********************
+
+I 6   1 1 0 0 0 0
+--> Impuriteis on current line (How many impurities are we solving?) ( ... impurity flags. In this case, first two lines are impurities.)

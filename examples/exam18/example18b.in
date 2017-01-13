@@ -1,0 +1,98 @@
+option quiet 
+set echo 
+mode one.dim
+
+# set boron fi and diffusion coefficients
+boron silicon Fi=0.8
+boron silicon Dix.0=0.037 Dix.E=3.46 Dip.0=0.72 Dip.E=3.46
+
+# set up grid
+line x loc=0.0 spacing=0.2 tag=top
+line x loc=0.135 spacing=0.005
+line x loc=0.145 spacing=0.005
+line x loc=0.155 spacing=0.005
+line x loc=0.165 spacing=0.005
+line x loc=0.175 spacing=0.005
+line x loc=0.185 spacing=0.005
+line x loc=0.195 spacing=0.005
+line x loc=0.205 spacing=0.005
+line x loc=0.215 spacing=0.005
+line x loc=1.0 spacing=0.01
+line x loc=1.5 spacing=0.01
+line x loc=2.0 spacing=0.01
+line x loc=5.0 spacing=0.5
+line x loc=200.0 spacing=10.0 tag=bottom
+
+# initialize structure
+region silicon  xlo=top xhi=bottom
+bound exposed xlo=top xhi=top
+bound backside xlo=bottom xhi=bottom
+init phosphorus  conc=     1.00e+14  orient = 100 
+
+# initialize method and errors
+method two.d
+method inter  rel.err=.001 
+method vacan rel.err=.001 
+
+# turn off traps
+trap    silicon total=0 enable=f
+interst silicon ktrap.0=1.0e-30 ktrap.E=0.0
+
+# only use neutral defects
+interst silicon neu.0=1.0 neg.0=0.00 dneg.0=0.0 pos.0=0.00 dpos.0=0.0
+interst silicon neu.E=0.0 neg.E=0.00 dneg.E=0.0 pos.E=0.00 dpos.E=0.0
+
+# set vacancy parameters
+vacancy silicon Cstar.0=8.0e17 Cstar.E=0.503
+vacancy silicon D.0=3.02e7 D.E=4.652
+vacancy silicon /oxide    Ksurf.0=5.556e6 Ksurf.E=3.983
+
+# set interstitial parameters
+interst silicon D.0=3.031e9 D.E=3.66
+interst silicon Cstar.0=1.49e11 Cstar.E=0.0
+interst silicon /gas Ksurf.0=2.009e11 Ksurf.E=3.455
+interst silicon /oxide Ksurf.0=2.009e11 Ksurf.E=3.455
+
+# bulk recombination
+interst silicon Kr.0=242.48 Kr.E=3.66
+vacancy silicon Kr.0=242.48 Kr.E=3.66
+
+# silicon /gas interface parameters
+interstitial silicon  /gas  Krat.0= 0.      Krat.E= 0.
+interstitial silicon  /gas  Kpow.0= 0.      Kpow.E= 0.
+
+# silicon /oxide interface parameters
+interstitial silicon  /oxide  Krat.0= 2400.      Krat.E= 0.
+interstitial silicon  /oxide  Kpow.0= 0.5      Kpow.E= 0.
+interstitial silicon  /oxide  Gpow.0= 0.0      Kpow.E= 0.
+
+# vacancy interface parameters
+vacancy silicon  /gas    Krat.0= 0.      Krat.E= 0.
+vacancy silicon  /gas    Kpow.0= 0.      Kpow.E= 0.
+vacancy silicon  /oxide    Krat.0= 0.      Krat.E= 0.
+vacancy silicon  /oxide    Kpow.0= 0.      Kpow.E= 0.
+
+# change injection parameter, theta, to fit normal OED
+interst       silicon /oxide theta.0=1.63*1.0e-2 theta.E=0.0
+
+# read in epi boron profile
+profile infile=initepi.dat boron
+
+# initialize defects
+method fermi
+diffuse temp=900 time=0.001
+
+# turn off dislocation loop model
+#dislocation rinit=235e-8 looploc=1750e-8 rho=4.5e9 fdrdt=1/1.75
+#dislocation loopgdt=0.001 gamma=4.375e13 omega=2.0e-23 burger=3.14e-8
+#dislocation mu=4.975e23 nu=0.27864583333 ro=3.14e-8
+
+method two.d init=1e-6
+
+# 900C, 2 hour wet oxidation
+diffuse time=120 temp=900 weto2 press=0.9
+
+# save structure file
+struct out=example18b.str
+
+quit

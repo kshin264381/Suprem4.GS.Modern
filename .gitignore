@@ -17,6 +17,16 @@ Makefile.in
 /missing
 /stamp-h1
 
+*.o
+*.Po
+/bin
+/data
+/keyread
+/src/keyread
+*.str
+*.exe
+Makefile.x
+
 # =========================
 # Operating System Files
 # =========================
